@@ -12,7 +12,7 @@ const upload = multer({
     },
     fileFilter(req, file, cb){
         if(!file.originalname.match(/\.(jpg|jpeg|png)$/))
-            return cb(new Error("Prihvatljivi format slike je jpg, jpeg i png"));
+            return cb(new Error("The acceptable image format is jpg, jpeg and png"));
         cb(undefined, true);
     }
 });
@@ -40,7 +40,7 @@ router.post("/portal/:id/avatar", upload.single("avatar"), async (req, res)=>{
         else if(q=="Lecturer")
             Model = Lecturer;
         else
-            throw new Error("Greška");
+            throw new Error("Error");
         //Creating avatar buffer to mongoose model
         const model = await Model.findById(req.params.id);
         model.avatar = buffer;
@@ -66,10 +66,10 @@ router.get("/portal/:id/avatar", async (req, res)=>{
         else if(q=="Lecturer")
             Model = Lecturer;
         else
-            throw new Error("Greška");
+            throw new Error("Error");
         const model = await Model.findById(req.params.id);
         if(!model || !model.avatar)
-            throw new Error("Korisnik nije registrovan ili ne posjeduje avatara!");
+            throw new Error("The user is not registered or does not own an avatar!");
         //Set-up file
         res.set("Content-Type", "image/png");
         res.send(model.avatar);
@@ -91,11 +91,11 @@ router.delete("/portal/:id/avatar", async(req, res)=>{
         else if(q=="Lecturer")
             Model = Lecturer;
         else
-            throw new Error("Greška");
+            throw new Error("Error");
         //Deleting avatar buffer from mongoose model
         const model = await Model.findById(req.params.id);
         if(!model || !model.avatar)
-            throw new Error("Korisnik nije registrovan ili ne posjeduje avatara!");
+            throw new Error("The user is not registered or does not own an avatar!");
         model.avatar = undefined;
         model.save();
         res.send();
